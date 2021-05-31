@@ -1,5 +1,5 @@
 import type { Message, Api, ApiMap, PluginApi } from '@remixproject/plugin-utils'
-import type { RemixApi } from '@remixproject/plugin-api';
+import type { IRemixApi } from '@remixproject/plugin-api';
 import { listenEvent, callEvent, getMethodPath } from '@remixproject/plugin-utils'
 import { PluginClient } from './client'
 import { createApi } from './api'
@@ -10,8 +10,6 @@ export interface ClientConnector {
   /** Get message from the engine */
   on(cb: (message: Partial<Message>) => void): void
 }
-
-type CreateConnector = (client: PluginClient) => ClientConnector
 
 /** Check if a message is an handshake */
 export function isHandshake(message: Partial<Message>) {
@@ -33,13 +31,14 @@ export function connectClient(connector: ClientConnector, client: PluginClient =
 
   connector.on(async ({ action, key, name, payload, id, requestInfo, error }) => {
     try {
-
       // If handshake set isLoaded
-      if (!isLoaded && isHandshake({ action, key })) {
-        isLoaded = true
-        client.events.on('send', (msg: Message) => connector.send(msg))
-        client.events.emit('loaded')
-        client.name = payload[0]
+      if (isHandshake({ action, key })) {
+        if (!isLoaded) {
+          isLoaded = true
+          client.events.on('send', (msg: Message) => connector.send(msg))
+          client.events.emit('loaded')
+          client.name = payload[0]
+        }
         // Send back the list of methods exposed by the plugin
         const message = {action: 'response', name, key, id, payload: client.methods} as const
         connector.send(message)
@@ -75,6 +74,7 @@ export function connectClient(connector: ClientConnector, client: PluginClient =
         }
       }
     } catch (err) {
+      console.error(err)
       const message = { action: action === 'request' ? 'response' : action, name, key, id, error: err.message || err } as const
       connector.send(message)
     }
@@ -119,7 +119,7 @@ export function applyApi(client: PluginClient) {
  */
 export const createConnectorClient = <
   P extends Api,
-  App extends ApiMap = RemixApi
+  App extends ApiMap = Readonly<IRemixApi>
 >(
   connector: ClientConnector,
   client: PluginClient<P, App> = new PluginClient()

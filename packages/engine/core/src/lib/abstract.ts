@@ -56,10 +56,10 @@ export class Plugin<T extends Api = any, App extends ApiMap = any> implements Pl
     this.profile.methods = methods
   }
 
-  activate() {
+  activate(): any | Promise<any> {
     if (this.onActivation) this.onActivation()
   }
-  deactivate() {
+  deactivate(): any | Promise<any> {
     if (this.onDeactivation) this.onDeactivation()
   }
 
@@ -134,6 +134,23 @@ export class Plugin<T extends Api = any, App extends ApiMap = any> implements Pl
     } else {
       return Promise.resolve(false)
     }
+  }
+
+  /**
+   * Called by the engine when a plugin try to activate it
+   * @param from the profile of the plugin activating this plugin
+   * @param method method used to activate this plugin if any
+   */
+  async canActivate(from: Profile, method?: string): Promise<boolean> {
+    return true
+  }
+
+  /**
+   * Called by the engine when a plugin try to deactivate it
+   * @param from the profile of the plugin deactivating this plugin
+   */
+  async canDeactivate(from: Profile): Promise<boolean> {
+    return true
   }
 
   /////////////

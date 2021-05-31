@@ -2,10 +2,10 @@
 
 Remix plugin is a universal plugin system written in Typescript.
 
-It provides an extendable engine that simplify communication between multiple internal or external source.
+It provides an extendable engine that simplifies communication between multiple internal or external sources.
 
 
-The repository manage multiple projects related to remix plugins. It's devided into two main caterogies : 
+This repository manages multiple projects related to remix plugins. It's divided into two main categories : 
 - Engine: A library to manage communication between plugins. 
 - Plugin: A library to create an external plugin.
 
@@ -20,7 +20,7 @@ The core component of the engine is the `@remixproject/engine` library. It can b
 | [@remixproject/engine-web](/packages/engine/web)                         | [![badge](https://img.shields.io/npm/v/@remixproject/engine-web/latest.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/engine-web) | [![badge](https://img.shields.io/npm/v/@remixproject/engine-web/next.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/engine-web)
 | [@remixproject/engine-node](/packages/engine/node)                       | [![badge](https://img.shields.io/npm/v/@remixproject/engine-node/latest.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/engine-node) | [![badge](https://img.shields.io/npm/v/@remixproject/engine-node/next.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/engine-node)
 
-> To create a new environment connector check out [@remixproject/engine](/packages/engine/core). 
+> To create a new environment connector, check out [@remixproject/engine](/packages/engine/core). 
 
 
 ## Plugin
@@ -32,14 +32,15 @@ The core component of the plugin is the `@remixproject/plugin` library. It can b
 | [@remixproject/plugin](/packages/plugin/core)                            | [![badge](https://img.shields.io/npm/v/@remixproject/plugin/latest.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/plugin) | [![badge](https://img.shields.io/npm/v/@remixproject/plugin/next.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/plugin)
 | [@remixproject/plugin-vscode](/packages/plugin/vscode)                   | [![badge](https://img.shields.io/npm/v/@remixproject/plugin-vscode/latest.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/plugin-vscode) | [![badge](https://img.shields.io/npm/v/@remixproject/plugin-vscode/next.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/plugin-vscode)
 | [@remixproject/plugin-iframe](/packages/plugin/iframe)                         | [![badge](https://img.shields.io/npm/v/@remixproject/plugin-iframe/latest.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/plugin-iframe) | [![badge](https://img.shields.io/npm/v/@remixproject/plugin-iframe/next.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/plugin-iframe)
+| [@remixproject/plugin-webview](/packages/plugin/webview)                         | [![badge](https://img.shields.io/npm/v/@remixproject/plugin-webview/latest.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/plugin-webview) | [![badge](https://img.shields.io/npm/v/@remixproject/plugin-webview/next.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/plugin-webview)
 | [@remixproject/plugin-child-process](/packages/plugin/child-process)                       | [![badge](https://img.shields.io/npm/v/@remixproject/plugin-child-process/latest.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/plugin-child-process) | [![badge](https://img.shields.io/npm/v/@remixproject/plugin-child-process/next.svg?style=flat-square)](https://www.npmjs.com/package/@remixproject/plugin-child-process)
 
-> To create a new environment connector check out [@remixproject/plugin](/packages/plugin/core). 
+> To create a new environment connector, check out [@remixproject/plugin](/packages/plugin/core). 
 
 
 ## API
 
-Remix plugin offers a set of common API for plugin to be implemented. This set of API is used in [remix-ide](https://remix.ethereum.org), therefore every plugin running inside remix-ide should be able to run in an engine that implements theses APIs.
+Remix plugin offers a set of common APIs for plugins to implement. This set of APIs is used in [remix-ide](https://remix.ethereum.org), therefore every plugin running inside remix-ide should be able to run in an engine that implements these APIs.
 
 | Name                               | Latest Version       | Next Version
 | ---------------------------------- | :------------------: | :------------------:
@@ -47,7 +48,7 @@ Remix plugin offers a set of common API for plugin to be implemented. This set o
 
 
 
-> The firt goal of remix plugin was to enable a plugin to work in multiple engine's envrionments. If the plugin has dependancies on other plugins, each engine must implements these dependancies.
+> The first goal of **remix plugin** is to enable a plugin to work in the envrionments of multiple engines. If a plugin has dependancies on other plugins, each engine must implement these dependancies.
 
 
 # Contribute
@@ -60,7 +61,7 @@ npm install
 ```
 
 ## See dependancy graph
-To better understand the project structure you can display a dependancy graph with:
+To better understand the project structure, you can display a dependancy graph with:
 ```
 npm run dep-graph
 ```
@@ -73,6 +74,16 @@ This uses nx's affected:build to only update what has been changes since last bu
 npm run build
 ```
 
+## Build a specific project
+```
+npx nx build ${projectName} --with-deps
+```
+
+**Example for engine-vscode :**
+```
+npx nx build engine-vscode --with-deps
+```
+
 ## Test
 This uses nx's affected:test to only update what has been changes since last test.
 ```
@@ -80,7 +91,7 @@ npm test
 ```
 
 ## Publish
-This uses lerna to deploy all the packages with all a new version:
+This uses lerna to deploy all the packages with a new version:
 ```
 npm run deploy:latest
 ```

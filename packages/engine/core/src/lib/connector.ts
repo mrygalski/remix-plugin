@@ -39,22 +39,22 @@ export abstract class PluginConnector extends Plugin {
    * Open connection with the plugin
    * @param url The transformed url the plugin should connect to
    */
-  protected abstract connect(url: string): void
+  protected abstract connect(url: string): any | Promise<any>
   /** Close connection with the plugin */
-  protected abstract disconnect(): void
+  protected abstract disconnect(): any | Promise<any>
 
-  activate() {
+  async activate() {
     const url = this.options.transformUrl
       ? this.options.transformUrl(this.profile)
       : transformUrl(this.profile)
-    this.connect(url)
-    super.activate()
+    await this.connect(url)
+    return super.activate()
   }
 
-  deactivate() {
+  async deactivate() {
     this.loaded = false
-    this.disconnect()
-    super.deactivate()
+    await this.disconnect()
+    return super.deactivate()
   }
 
   /** Set options for an external plugin */
@@ -78,12 +78,18 @@ export abstract class PluginConnector extends Plugin {
   /** Perform handshake with the client if not loaded yet */
   protected async handshake() {
     if (!this.loaded) {
-      const methods: string[] = await this.callPluginMethod('handshake', [this.profile.name])
+      this.loaded = true
+      let methods: string[];
+      try {
+        methods = await this.callPluginMethod('handshake', [this.profile.name])
+      } catch (err) {
+        this.loaded = false
+        throw err;
+      }
       if (methods) {
         this.profile.methods = methods
+        await this.call('manager', 'updateProfile', this.profile)
       }
-      this.call('manager', 'updateProfile', this.profile)
-      this.loaded = true
     } else {
       // If there is a broken connection we want send back the handshake to the plugin client
       return this.callPluginMethod('handshake', [this.profile.name])

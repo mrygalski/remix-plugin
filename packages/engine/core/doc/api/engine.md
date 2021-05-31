@@ -9,22 +9,10 @@ The `Engine` depends on the plugin manager for the permission system.
 
 ```typescript
 const manager = new PluginManager()
-const engine = new Engine(manager)
-await engine.onload() // Wait for the manager to be fully loaded
+const engine = new Engine()
+engine.register(manager)
 ```
 
-> Always wait for the engine to be loaded before running any other plugin related operation.
-
-## Methods
-
-### onload
-```typescript
-await engine.onload()
-// OR
-engine.onload(() => {})
-```
-
-Wait for the manager to be fully loaded. As most of the API is asynchronous, this is important to wait for the manager to be loaded to avoid initialization errors.
 
 ### register
 ```typescript
@@ -33,14 +21,14 @@ register(plugins: Plugin | Plugin[]): string | string[]
 
 Register one or several plugins into the engine and return their names.
 
-A plugin **must be register before beeing activated**.
+A plugin **must be register before being activated**.
 
 ### isRegistered
 ```typescript
 isRegistered(name: string): boolean
 ```
 
-Check if a plugin with this name is registered by the engine currently.
+Checks if a plugin with this name has already been registered by the engine.
 
 ## Hooks
 
@@ -49,4 +37,4 @@ Check if a plugin with this name is registered by the engine currently.
 onRegistration(plugin: Plugin) {}
 ```
 
-Method triggered when a plugin is registered.
+This method triggered when a plugin is registered.

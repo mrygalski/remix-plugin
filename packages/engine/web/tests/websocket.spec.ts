@@ -41,11 +41,10 @@ describe('Websocket plugin', () => {
   let plugin: MockSocket
 
   beforeEach(async () => {
+    const engine = new Engine()
     manager = new PluginManager(pluginManagerProfile)
-    const engine = new Engine(manager)
-    await engine.onload()
     plugin = new MockSocket()
-    engine.register(plugin)
+    engine.register([manager, plugin])
   })
 
   test('Activation', async () => {
@@ -63,8 +62,8 @@ describe('Websocket plugin', () => {
     }, 1500)
   })
 
-  test('Deactivation', (done) => {
-    plugin.deactivate()
+  test('Deactivation', async (done) => {
+    await plugin.deactivate()
     expect(plugin.onDeactivation).toHaveBeenCalled()
     expect(plugin.socket.removeEventListener).toHaveBeenCalledTimes(2) // reconnectOnclose & listener
     expect(plugin.socket.close).toHaveBeenCalled()

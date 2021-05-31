@@ -8,44 +8,16 @@ export class Engine {
   private events: Record<string, any> = {}
   private listeners: Record<string, any> = {}
   private eventMemory: Record<string, any> = {}
-  private isLoaded = false
+  private manager: BasePluginManager
 
-  private managerLoaded: () => void
   onRegistration?(plugin: Plugin): void
-  /** Update the options of the plugin when beeing registered */
+  /** Update the options of the plugin when being registered */
   setPluginOption?(profile: Profile): PluginOptions
 
-  constructor(private manager: BasePluginManager) {
-    this.plugins['manager'] = manager
-    // Activate the Engine & start listening on activation and deactivation
-    this.manager['engineActivatePlugin'] = (name: string) => this.activatePlugin(name)
-    this.manager['engineDeactivatePlugin'] = (name: string) => this.deactivatePlugin(name)
-    manager.activatePlugin('manager').then(() => {
-      this.isLoaded = true
-      // Run callback on `onload` if any
-      if (this.managerLoaded) this.managerLoaded()
-    })
-  }
-
-  /** Wait for the engine to have loaded the manager */
-  async onload(cb?: () => void): Promise<void> {
-    return new Promise((res, rej) => {
-      if (this.isLoaded) { // If already loaded resolve
-        res()
-        if (cb) cb()
-      } else { // Else store the callback
-        this.managerLoaded = () => {
-          res()
-          if (cb) cb()
-          delete this.managerLoaded // Cleanup once it's loaded
-        }
-      }
-    })
-  }
 
   /**
    * Broadcast an event to the plugin listening
-   * @param emitter Plugin name that emit the event
+   * @param emitter Plugin name that emits the event
    * @param event The name of the event
    * @param payload The content of the event
    */
@@ -70,7 +42,7 @@ export class Engine {
    * @param listener The name of the plugin that listen on the event
    * @param emitter The name of the plugin that emit the event
    * @param event The name of the event
-   * @param cb Callback function to trigger when event is trigger
+   * @param cb Callback function to trigger when the event is trigger
    */
   private addListener(listener: string, emitter: string, event: string, cb: Function) {
     const eventName = listenEvent(emitter, event)
@@ -91,9 +63,9 @@ export class Engine {
   }
 
   /**
-   * Remove an event from the list of events of a listener
+   * Remove an event from the list of a listener's events
    * @param listener The name of the plugin that was listening on the event
-   * @param emitter The name of the plugin that emit the event
+   * @param emitter The name of the plugin that emitted the event
    * @param event The name of the event
    */
   private removeListener(listener: string, emitter: string, event: string) {
@@ -107,9 +79,9 @@ export class Engine {
   /**
    * Create a listener that listen only once on an event
    * @param listener The name of the plugin that listen on the event
-   * @param emitter The name of the plugin that emit the event
+   * @param emitter The name of the plugin that emitted the event
    * @param event The name of the event
-   * @param cb Callback function to trigger when event is trigger
+   * @param cb Callback function to trigger when event is triggered
    */
   private listenOnce(listener: string, emitter: string, event: string, cb: Function) {
     this.addListener(listener, emitter, event, (...args: any[]) => {
@@ -121,8 +93,8 @@ export class Engine {
 
   /**
    * Call a method of a plugin from another
-   * @param caller The name of the plugin that call the method
-   * @param path The path of the plugin that manage the method
+   * @param caller The name of the plugin that calls the method
+   * @param path The path of the plugin that manages the method
    * @param method The name of the method
    * @param payload The argument to pass to the method
    */
@@ -133,16 +105,18 @@ export class Engine {
     }
 
     // Get latest version of the profiles
-    const [ to, from ] = await Promise.all([
+    const [to, from] = await Promise.all([
       this.manager.getProfile(target),
       this.manager.getProfile(caller),
     ])
 
     // Check if plugin FROM can activate plugin TO
     const isActive = await this.manager.isActive(target)
+    
     if (!isActive) {
-      const canActivate = await this.manager.canActivate(from, to)
-      if (canActivate) {
+      const managerCanActivate = await this.manager.canActivatePlugin(from, to, method)
+      const pluginCanActivate = await this.plugins[to.name]?.canActivate(to, method)
+      if (managerCanActivate && pluginCanActivate) {
         await this.manager.toggleActive(target)
       } else {
         throw new Error(`${from.name} cannot call ${method} of ${target}, because ${target} is not activated yet`)
@@ -150,9 +124,11 @@ export class Engine {
     }
 
     // Check if method is exposed
-    if (!to.methods.includes(method)) {
+    // note: native methods go here
+    const methods = [...(to.methods || []), 'canDeactivate']
+    if (!methods.includes(method)) {
       const notExposedMsg = `Cannot call method "${method}" of "${target}" from "${caller}", because "${method}" is not exposed.`
-      const exposedMethodsMsg = `Here is the list of exposed methods: ${to.methods.map(m => `"${m}"`).join(',')}`
+      const exposedMethodsMsg = `Here is the list of exposed methods: ${methods.map(m => `"${m}"`).join(',')}`
       throw new Error(`${notExposedMsg} ${exposedMethodsMsg}`)
     }
 
@@ -161,9 +137,9 @@ export class Engine {
   }
 
   /**
-   * Create an object to access easily any plugin registered
+   * Create an object to easily access any registered plugin
    * @param name Name of the caller plugin
-   * @note This method creates a snapshot at the time of the time of activation
+   * @note This method creates a snapshot at the time of activation
    */
   private async createApp(name: string): Promise<PluginApi<any>> {
     const getProfiles = Object.keys(this.plugins).map(key => this.manager.getProfile(key))
@@ -221,7 +197,7 @@ export class Engine {
   }
 
   /**
-   * Deactivate a plugin by removing all event listeners and making it inaccessible
+   * Deactivate a plugin by removing all its event listeners and making it inaccessible
    * @param name The name of the plugin
    * @note This method is trigger by the plugin manager when a plugin has been deactivated
    */
@@ -264,9 +240,10 @@ export class Engine {
    * @param plugin The deactivated plugin to update the methods from
    */
   private updateErrorHandler(plugin: Plugin) {
+    const name = plugin.name
     // SET ERROR MESSAGE FOR call, on, once, off, emit
     const deactivatedWarning = (message: string) => {
-      return `Plugin ${name} is currently deactivated. ${message}. Activate ${name} first.`
+      return `Plugin "${name}" is currently deactivated. ${message}. Activate "${name}" first.`
     }
     plugin['call'] = (target: string, key: string, ...payload: any[]) => {
       throw new Error(deactivatedWarning(`It cannot call method ${key} of plugin ${target}.`))
@@ -294,9 +271,12 @@ export class Engine {
       if (this.plugins[plugin.name]) {
         throw new Error(`Plugin ${plugin.name} is already register.`)
       }
+      if (plugin.name === 'manager') {
+        this.registerManager(plugin as BasePluginManager)
+      }
       this.plugins[plugin.name] = plugin
-      this.manager.addProfile(plugin.profile)
-       // Update Error Handling for better debug
+      this.manager?.addProfile(plugin.profile)
+      // Update Error Handling for better debug
       this.updateErrorHandler(plugin)
       // SetPluginOption is before onRegistration to let plugin update it's option inside onRegistration
       if (this.setPluginOption) {
@@ -307,7 +287,30 @@ export class Engine {
       if (this.onRegistration) this.onRegistration(plugin)
       return plugin.name
     }
-    return Array.isArray(plugins) ? plugins.map(plugin => register(plugin)) : register(plugins)
+    return Array.isArray(plugins) ? plugins.map(register) : register(plugins);
+  }
+
+  /** Register the manager */
+  private registerManager(manager: BasePluginManager) {
+    this.manager = manager
+    // Activate the Engine & start listening on activation and deactivation
+    this.manager['engineActivatePlugin'] = (name: string) => this.activatePlugin(name)
+    this.manager['engineDeactivatePlugin'] = (name: string) => this.deactivatePlugin(name)
+    // Add all previous profiles
+    const profiles = Object.values(this.plugins).map(p => p.profile)
+    this.manager.addProfile(profiles)
+  }
+
+  /** Remove plugin(s) from engine */
+  remove(names: string | string[]) {
+    const remove = async (name: string) => {
+      await this.manager.deactivatePlugin(name)
+      delete this.listeners[name]
+      delete this.plugins[name]
+    }
+    return Array.isArray(names)
+      ? Promise.all(names.map(remove))
+      : remove(names);
   }
 
   /**

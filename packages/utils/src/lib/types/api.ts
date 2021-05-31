@@ -42,9 +42,7 @@ export type MethodApi<T extends Api> = {
 export type CustomApi<T extends Api> = EventApi<T> & MethodApi<T>
 
 /** A map of Api used to describe all the plugin's api in the project */
-export type ApiMap = Readonly<{
-  [name: string]: Api
-}>
+export type ApiMap = Readonly<Record<string, Api>>
 
 /** A map of plugin based on the ApiMap. It enforces the PluginEngine */
 export type PluginApi<T extends ApiMap> = {
@@ -52,4 +50,6 @@ export type PluginApi<T extends ApiMap> = {
 }
 
 // The interface that a Plugin should implement
-export type API<T extends Api> = { [M in keyof T['methods']]: T['methods'][M] }
+export type API<T extends Api> = {
+  [M in keyof T['methods']]: T['methods'][M] | Promise<T['methods'][M]>
+}

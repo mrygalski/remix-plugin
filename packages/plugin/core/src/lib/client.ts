@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
-import { RemixApi, remixProfiles, } from '@remixproject/plugin-api'
-import { callEvent, listenEvent, createService, activateService } from '@remixproject/plugin-utils'
+import { RemixApi, remixProfiles } from '@remixproject/plugin-api'
+import { callEvent, listenEvent, createService, activateService, GetPluginService, Profile } from '@remixproject/plugin-utils'
 import type {
   Api,
   PluginRequest,
@@ -41,7 +41,6 @@ export interface PluginOptions<T extends ApiMap> {
 export const defaultOptions: Partial<PluginOptions<any>> = {
   customTheme: false,
   customApi: remixProfiles,
-  devMode: { port: 8080, origins: [] },
 }
 
 /** Throw an error if client try to send a message before connection */
@@ -63,12 +62,17 @@ export class PluginClient<T extends Api = any, App extends ApiMap = RemixApi> im
   public methods: string[]
   public activateService: Record<string, () => Promise<any>> = {}
 
+  onActivation?(): void
+
   constructor(options: Partial<PluginOptions<App>> = {}) {
     this.options = {
       ...defaultOptions,
       ...options
     } as PluginOptions<App>
-    this.events.once('loaded', () => this.isLoaded = true)
+    this.events.once('loaded', () => {
+      this.isLoaded = true
+      if (this.onActivation) this.onActivation()
+    })
   }
 
   // Wait until this connection is settled
@@ -100,6 +104,15 @@ export class PluginClient<T extends Api = any, App extends ApiMap = RemixApi> im
     } else {
       return Promise.resolve(false)
     }
+  }
+
+  /**
+   * Called before deactivating the plugin
+   * @param from profile of plugin asking to deactivate
+   * @note PluginManager will always be able to deactivate
+   */
+  canDeactivate(from: Profile) {
+    return true
   }
 
   //////////////////////
@@ -174,7 +187,10 @@ export class PluginClient<T extends Api = any, App extends ApiMap = RemixApi> im
    * @param name The name of the service
    * @param service The service
    */
-  async createService<S extends Record<string, any>>(name: string, service: IPluginService<S>) {
+  async createService<S extends Record<string, any>, Service extends IPluginService<S>>(
+    name: string,
+    service: Service
+  ): Promise<GetPluginService<Service>> {
     if (this.methods && this.methods.includes(name)) {
       throw new Error('A service cannot have the same name as an exposed method')
     }

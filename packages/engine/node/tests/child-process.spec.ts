@@ -53,11 +53,10 @@ describe('ChildProcess plugin', () => {
   let plugin: MockChildProcess
 
   beforeEach(async () => {
+    const engine = new Engine()
     manager = new PluginManager(pluginManagerProfile)
-    const engine = new Engine(manager)
-    await engine.onload()
     plugin = new MockChildProcess()
-    engine.register(plugin)
+    engine.register([manager, plugin])
   })
 
   test('Activation', async () => {
@@ -69,7 +68,7 @@ describe('ChildProcess plugin', () => {
 
   test('Deactivation', async () => {
     await plugin.activate()
-    plugin.deactivate()
+    await plugin.deactivate()
     expect(plugin.onDeactivation).toHaveBeenCalled()
     expect(plugin.process.off).toHaveBeenCalledTimes(1)
     expect(plugin.process.disconnect).toHaveBeenCalledTimes(1)

@@ -21,6 +21,11 @@ class MockIframe extends IframePlugin {
     super({ name: 'iframe', location: 'sidePanel', methods: [], url: 'https://url' })
   }
 
+  async connect(url: string) {
+    super.connect(url);  // don't wait for the returned value as it's waiting for handshake
+    return true
+  }
+
   // Mock methods after activation
   onActivation() {
     this.call = jest.fn(async () => true)
@@ -37,12 +42,11 @@ describe('Iframe Plugin', () => {
   let host: MockHost
 
   beforeEach(async () => {
+    const engine = new Engine()
     manager = new PluginManager(pluginManagerProfile)
-    const engine = new Engine(manager)
-    await engine.onload()
     iframe = new MockIframe()
     host = new MockHost()
-    engine.register([iframe, host])
+    engine.register([manager, iframe, host])
     await manager.activatePlugin(['sidePanel', 'iframe'])
   })
 

@@ -8,14 +8,16 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/engine/core/tsconfig.lib.json",
-              "packages/engine/core/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/engine/core/**/*"]
+            "lintFilePatterns": [
+              "packages/engine/core/**/*.ts",
+              "packages/engine/core/**/*.spec.ts",
+              "packages/engine/core/**/*.spec.tsx",
+              "packages/engine/core/**/*.spec.js",
+              "packages/engine/core/**/*.spec.jsx",
+              "packages/engine/core/**/*.d.ts"
+            ]
           }
         },
         "test": {
@@ -32,7 +34,16 @@
             "tsConfig": "packages/engine/core/tsconfig.lib.json",
             "packageJson": "packages/engine/core/package.json",
             "main": "packages/engine/core/src/index.ts",
-            "assets": ["packages/engine/core/*.md"]
+            "assets": ["packages/engine/core/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\engine\\core\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/engine/core"
           }
         }
       }
@@ -44,14 +55,16 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/engine/node/tsconfig.lib.json",
-              "packages/engine/node/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/engine/node/**/*"]
+            "lintFilePatterns": [
+              "packages/engine/node/**/*.ts",
+              "packages/engine/node/**/*.spec.ts",
+              "packages/engine/node/**/*.spec.tsx",
+              "packages/engine/node/**/*.spec.js",
+              "packages/engine/node/**/*.spec.jsx",
+              "packages/engine/node/**/*.d.ts"
+            ]
           }
         },
         "test": {
@@ -68,7 +81,16 @@
             "tsConfig": "packages/engine/node/tsconfig.lib.json",
             "packageJson": "packages/engine/node/package.json",
             "main": "packages/engine/node/src/index.ts",
-            "assets": ["packages/engine/node/*.md"]
+            "assets": ["packages/engine/node/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\engine\\node\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/engine/node"
           }
         }
       }
@@ -80,14 +102,16 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/engine/web/tsconfig.lib.json",
-              "packages/engine/web/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/engine/web/**/*"]
+            "lintFilePatterns": [
+              "packages/engine/web/**/*.ts",
+              "packages/engine/web/**/*.spec.ts",
+              "packages/engine/web/**/*.spec.tsx",
+              "packages/engine/web/**/*.spec.js",
+              "packages/engine/web/**/*.spec.jsx",
+              "packages/engine/web/**/*.d.ts"
+            ]
           }
         },
         "test": {
@@ -104,7 +128,16 @@
             "tsConfig": "packages/engine/web/tsconfig.lib.json",
             "packageJson": "packages/engine/web/package.json",
             "main": "packages/engine/web/src/index.ts",
-            "assets": ["packages/engine/web/*.md"]
+            "assets": ["packages/engine/web/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\engine\\web\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/engine/web"
           }
         }
       }
@@ -116,14 +149,16 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/engine/vscode/tsconfig.lib.json",
-              "packages/engine/vscode/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/engine/vscode/**/*"]
+            "lintFilePatterns": [
+              "packages/engine/vscode/**/*.ts",
+              "packages/engine/vscode/**/*.spec.ts",
+              "packages/engine/vscode/**/*.spec.tsx",
+              "packages/engine/vscode/**/*.spec.js",
+              "packages/engine/vscode/**/*.spec.jsx",
+              "packages/engine/vscode/**/*.d.ts"
+            ]
           }
         },
         "test": {
@@ -140,7 +175,16 @@
             "tsConfig": "packages/engine/vscode/tsconfig.lib.json",
             "packageJson": "packages/engine/vscode/package.json",
             "main": "packages/engine/vscode/src/index.ts",
-            "assets": ["packages/engine/vscode/*.md"]
+            "assets": ["packages/engine/vscode/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\engine\\vscode\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/engine/vscode"
           }
         }
       }
@@ -152,14 +196,16 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/utils/tsconfig.lib.json",
-              "packages/utils/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/utils/**/*"]
+            "lintFilePatterns": [
+              "packages/utils/**/*.ts",
+              "packages/utils/**/*.spec.ts",
+              "packages/utils/**/*.spec.tsx",
+              "packages/utils/**/*.spec.js",
+              "packages/utils/**/*.spec.jsx",
+              "packages/utils/**/*.d.ts"
+            ]
           }
         },
         "test": {
@@ -176,7 +222,16 @@
             "tsConfig": "packages/utils/tsconfig.lib.json",
             "packageJson": "packages/utils/package.json",
             "main": "packages/utils/src/index.ts",
-            "assets": ["packages/utils/*.md"]
+            "assets": ["packages/utils/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\utils\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/utils"
           }
         }
       }
@@ -188,14 +243,16 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/api/tsconfig.lib.json",
-              "packages/api/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/api/**/*"]
+            "lintFilePatterns": [
+              "packages/api/**/*.ts",
+              "packages/api/**/*.spec.ts",
+              "packages/api/**/*.spec.tsx",
+              "packages/api/**/*.spec.js",
+              "packages/api/**/*.spec.jsx",
+              "packages/api/**/*.d.ts"
+            ]
           }
         },
         "test": {
@@ -212,7 +269,16 @@
             "tsConfig": "packages/api/tsconfig.lib.json",
             "packageJson": "packages/api/package.json",
             "main": "packages/api/src/index.ts",
-            "assets": ["packages/api/*.md"]
+            "assets": ["packages/api/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\api\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/api"
           }
         }
       }
@@ -224,14 +290,16 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/plugin/core/tsconfig.lib.json",
-              "packages/plugin/core/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/plugin/core/**/*"]
+            "lintFilePatterns": [
+              "packages/plugin/core/**/*.ts",
+              "packages/plugin/core/**/*.spec.ts",
+              "packages/plugin/core/**/*.spec.tsx",
+              "packages/plugin/core/**/*.spec.js",
+              "packages/plugin/core/**/*.spec.jsx",
+              "packages/plugin/core/**/*.d.ts"
+            ]
           }
         },
         "test": {
@@ -248,7 +316,16 @@
             "tsConfig": "packages/plugin/core/tsconfig.lib.json",
             "packageJson": "packages/plugin/core/package.json",
             "main": "packages/plugin/core/src/index.ts",
-            "assets": ["packages/plugin/core/*.md"]
+            "assets": ["packages/plugin/core/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\plugin\\core\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/plugin/core"
           }
         }
       }
@@ -260,14 +337,16 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/plugin/iframe/tsconfig.lib.json",
-              "packages/plugin/iframe/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/plugin/iframe/**/*"]
+            "lintFilePatterns": [
+              "packages/plugin/iframe/**/*.ts",
+              "packages/plugin/iframe/**/*.spec.ts",
+              "packages/plugin/iframe/**/*.spec.tsx",
+              "packages/plugin/iframe/**/*.spec.js",
+              "packages/plugin/iframe/**/*.spec.jsx",
+              "packages/plugin/iframe/**/*.d.ts"
+            ]
           }
         },
         "test": {
@@ -284,7 +363,16 @@
             "tsConfig": "packages/plugin/iframe/tsconfig.lib.json",
             "packageJson": "packages/plugin/iframe/package.json",
             "main": "packages/plugin/iframe/src/index.ts",
-            "assets": ["packages/plugin/iframe/*.md"]
+            "assets": ["packages/plugin/iframe/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\plugin\\iframe\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/plugin/iframe"
           }
         }
       }
@@ -296,14 +384,16 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/plugin/vscode/tsconfig.lib.json",
-              "packages/plugin/vscode/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/plugin/vscode/**/*"]
+            "lintFilePatterns": [
+              "packages/plugin/vscode/**/*.ts",
+              "packages/plugin/vscode/**/*.spec.ts",
+              "packages/plugin/vscode/**/*.spec.tsx",
+              "packages/plugin/vscode/**/*.spec.js",
+              "packages/plugin/vscode/**/*.spec.jsx",
+              "packages/plugin/vscode/**/*.d.ts"
+            ]
           }
         },
         "test": {
@@ -320,7 +410,16 @@
             "tsConfig": "packages/plugin/vscode/tsconfig.lib.json",
             "packageJson": "packages/plugin/vscode/package.json",
             "main": "packages/plugin/vscode/src/index.ts",
-            "assets": ["packages/plugin/vscode/*.md"]
+            "assets": ["packages/plugin/vscode/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\plugin\\vscode\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/plugin/vscode"
           }
         }
       }
@@ -332,16 +431,15 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/plugin/child-process/tsconfig.lib.json",
-              "packages/plugin/child-process/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!packages/plugin/child-process/**/*"
+            "lintFilePatterns": [
+              "packages/plugin/child-process/**/*.ts",
+              "packages/plugin/child-process/**/*.spec.ts",
+              "packages/plugin/child-process/**/*.spec.tsx",
+              "packages/plugin/child-process/**/*.spec.js",
+              "packages/plugin/child-process/**/*.spec.jsx",
+              "packages/plugin/child-process/**/*.d.ts"
             ]
           }
         },
@@ -359,7 +457,16 @@
             "tsConfig": "packages/plugin/child-process/tsconfig.lib.json",
             "packageJson": "packages/plugin/child-process/package.json",
             "main": "packages/plugin/child-process/src/index.ts",
-            "assets": ["packages/plugin/child-process/*.md"]
+            "assets": ["packages/plugin/child-process/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\plugin\\child-process\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/plugin/child-process"
           }
         }
       }
@@ -371,14 +478,16 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/plugin/ws/tsconfig.lib.json",
-              "packages/plugin/ws/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/plugin/ws/**/*"]
+            "lintFilePatterns": [
+              "packages/plugin/ws/**/*.ts",
+              "packages/plugin/ws/**/*.spec.ts",
+              "packages/plugin/ws/**/*.spec.tsx",
+              "packages/plugin/ws/**/*.spec.js",
+              "packages/plugin/ws/**/*.spec.jsx",
+              "packages/plugin/ws/**/*.d.ts"
+            ]
           }
         },
         "test": {
@@ -395,7 +504,16 @@
             "tsConfig": "packages/plugin/ws/tsconfig.lib.json",
             "packageJson": "packages/plugin/ws/package.json",
             "main": "packages/plugin/ws/src/index.ts",
-            "assets": ["packages/plugin/ws/*.md"]
+            "assets": ["packages/plugin/ws/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\plugin\\ws\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/plugin/ws"
           }
         }
       }
@@ -407,21 +525,22 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/plugin/webview/tsconfig.lib.json",
-              "packages/plugin/webview/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/plugin/webview/**/*"]
+            "lintFilePatterns": [
+              "packages/plugin/webview/**/*.ts",
+              "packages/plugin/webview/**/*.spec.ts",
+              "packages/plugin/webview/**/*.spec.tsx",
+              "packages/plugin/webview/**/*.spec.js",
+              "packages/plugin/webview/**/*.spec.jsx",
+              "packages/plugin/webview/**/*.d.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "packages/plugin/webview/jest.config.js",
-            "tsConfig": "packages/plugin/webview/tsconfig.spec.json",
             "passWithNoTests": true
           }
         },
@@ -432,14 +551,273 @@
             "tsConfig": "packages/plugin/webview/tsconfig.lib.json",
             "packageJson": "packages/plugin/webview/package.json",
             "main": "packages/plugin/webview/src/index.ts",
-            "assets": ["packages/plugin/webview/*.md"]
+            "assets": ["packages/plugin/webview/*.md"],
+            "externalDependencies": "none",
+            "srcRootForCompilationRoot": "packages\\plugin\\webview\\src"
+          }
+        },
+        "publish": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": ["npm publish --tag={tag}"],
+            "cwd": "dist/packages/plugin/webview"
+          }
+        }
+      }
+    },
+    "examples": {
+      "projectType": "library",
+      "root": "root/is/required/or/it/fails",
+      "architect": {
+        "serve": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "nx run example-engine-web:serve",
+              "nx run example-plugin-webview:serve --port 4201"
+            ],
+            "parallel": true
+          }
+        }
+      }
+    },
+    "example-engine-web": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "examples/example/engine/web",
+      "sourceRoot": "examples/example/engine/web/src",
+      "prefix": "engine",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/examples/example/engine/web",
+            "index": "examples/example/engine/web/src/index.html",
+            "main": "examples/example/engine/web/src/main.ts",
+            "polyfills": "examples/example/engine/web/src/polyfills.ts",
+            "tsConfig": "examples/example/engine/web/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "examples/example/engine/web/src/favicon.ico",
+              "examples/example/engine/web/src/assets"
+            ],
+            "styles": ["examples/example/engine/web/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "examples/example/engine/web/src/environments/environment.ts",
+                  "with": "examples/example/engine/web/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "example-engine-web:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "example-engine-web:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "example-engine-web:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["examples/example/engine/web/src/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "examples/example/engine/web/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "example/engine-web-e2e": {
+      "root": "examples/example/engine/web-e2e",
+      "sourceRoot": "examples/example/engine/web-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "examples/example/engine/web-e2e/cypress.json",
+            "tsConfig": "examples/example/engine/web-e2e/tsconfig.e2e.json",
+            "devServerTarget": "example-engine-web:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "example-engine-web:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["examples/example/engine/web-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
+    "example-plugin-webview": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "examples/example/plugin/webview",
+      "sourceRoot": "examples/example/plugin/webview/src",
+      "prefix": "engine",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/examples/example/plugin/webview",
+            "index": "examples/example/plugin/webview/src/index.html",
+            "main": "examples/example/plugin/webview/src/main.ts",
+            "polyfills": "examples/example/plugin/webview/src/polyfills.ts",
+            "tsConfig": "examples/example/plugin/webview/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "examples/example/plugin/webview/src/favicon.ico",
+              "examples/example/plugin/webview/src/assets"
+            ],
+            "styles": ["examples/example/plugin/webview/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "examples/example/plugin/webview/src/environments/environment.ts",
+                  "with": "examples/example/plugin/webview/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "example-plugin-webview:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "example-plugin-webview:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "example-plugin-webview:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["examples/example/plugin/webview/src/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "examples/example/plugin/webview/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "example/plugin-webview-e2e": {
+      "root": "examples/example/plugin/webview-e2e",
+      "sourceRoot": "examples/example/plugin/webview-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "examples/example/plugin/webview-e2e/cypress.json",
+            "tsConfig": "examples/example/plugin/webview-e2e/tsconfig.e2e.json",
+            "devServerTarget": "example-plugin-webview:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "example-plugin-webview:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "examples/example/plugin/webview-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }
     }
   },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
+    "defaultCollection": "@nrwl/angular"
   },
   "schematics": {
     "@nrwl/workspace": {
@@ -498,6 +876,14 @@
       "library": {
         "linter": "eslint"
       }
+    },
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress",
+      "strict": true
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
     }
   }
 }

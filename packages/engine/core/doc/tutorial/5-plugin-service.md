@@ -6,13 +6,11 @@ Let's look at a "Command Line Interface" plugin that would expose a "git" servic
 
 ```typescript
 const manager = new PluginManager()
-const engine = new Engine(manager)
+const engine = new Engine()
 const cmd = new Plugin({ name: 'cmd' })
 const plugin = new Plugin({ name: 'caller' })
 
-// wait for the manager to be loaded
-await engine.onload()
-engine.register([cmd, plugin])
+engine.register([manager, cmd, plugin])
 await manager.activatePlugin(['cmd', 'caller'])
 
 // Create a service inside cmd
@@ -33,7 +31,7 @@ const fetched = await plugin.call('cmd.git', 'fetch')
 
 1. `createService`
 
-Every plugin can use `createService` to extends it's API.
+A plugin can use `createService` to extends it's API.
 
 ```typescript
 const git = await cmd.createService('git', {
@@ -54,7 +52,7 @@ await git.createService('deepGit', {
 
 2. `call('name.service', 'method')`
 
-To access a method from a plugin's service you should use the name of the plugin and the name of the service separated by ".": `pluginName.serviceName`.
+To access a method from a plugin's service, you should use the name of the plugin and the name of the service separated by ".": `pluginName.serviceName`.
 
 ```typescript
 // Call a service
@@ -67,7 +65,7 @@ Only the methods defined inside the `methods` key of the services are exposed. *
 
 3. `on('name', 'event')`
 
-The event listener does **not** requires the name of the service as the event is actually emitted at the plugin level.
+The event listener does **not** require the name of the service because the event is actually emitted at the plugin level.
 
 
 ```typescript
@@ -81,7 +79,7 @@ git.emit('committed')
 
 ### PluginService
 
-For larger service you might want to use a class based interface. For that your must extends the abstract `PluginService` class.
+For a larger service, you might want to use a class based interface. For that, your must extend the abstract `PluginService` class.
 
 You need to specify at least the :
 - `path`: name of the service.
@@ -124,18 +122,16 @@ class CmdPlugin extends Plugin {
 }
 ```
 
-In this example we activate the service on activation, but **only the first time**.
+In this example, we activate the service on activation, but **only the first time**.
 
 Now let's register the plugin : 
 ```typescript
 const manager = new PluginManager()
-const engine = new Engine(manager)
+const engine = new Engine()
 const plugin = new Plugin({ name: 'caller' })
 const cmd = new CmdPlugin()
 
-// wait for the manager to be loaded
-await engine.onload()
-engine.register([cmd, plugin])
+engine.register([manager, cmd, plugin])
 await manager.activatePlugin(['cmd', 'caller'])
 
 // Service is already created by the `onActivation` hook.
